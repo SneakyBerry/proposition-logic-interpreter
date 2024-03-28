@@ -1,0 +1,23 @@
+use crate::Prop;
+
+grammar;
+
+pub LexProp: Prop<'input> = {
+    #[precedence(level="0")]
+    LexPropInner,
+    #[precedence(level="1")]
+    r"[¬!]" <a: LexProp> => Prop::Not(Box::new(a)),
+    #[precedence(level="2")] #[assoc(side="right")]
+    <a: LexProp> r"[∧&]" <b: LexProp> => Prop::And(Box::new(a), Box::new(b)),
+    #[precedence(level="3")] #[assoc(side="right")]
+    <a: LexProp> r"[∨|]" <b: LexProp> => Prop::Or(Box::new(a), Box::new(b)),
+}
+
+pub LexPropInner: Prop<'input> = {
+    <s:r"\w+\d*"> => Prop::Var(s),
+    "⊤" => Prop::True,
+    "true" => Prop::True,
+    "⊥" => Prop::False,
+    "false" => Prop::False,
+    "(" <LexProp> ")",
+}
