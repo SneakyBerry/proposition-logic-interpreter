@@ -48,7 +48,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let ctx = read_variables(variable_names);
 
     let result = eval(&ctx, &prop).unwrap();
-    println!("Result: {}", &result);
 
+    println!("Result: {}", &result);
     Ok(())
 }
